@@ -86,7 +86,7 @@ class ConfigHandler:
         if key in self._class_attributes:
             return object.__setattr__(self, key, value)
 
-        self.store.update({key: value})
+        self._store.update({key: value})
         self._save_store_to_file()
 
 
