@@ -39,7 +39,7 @@ class ConfigHandler:
         try:
             # delete config backup file
             os.remove("{}.backup".format(self._path))
-        except FileNotFoundError:
+        except OSError:
             """
             no-op because file didn't exist
             nothing that we need to do 
@@ -47,7 +47,7 @@ class ConfigHandler:
 
         try:
             os.rename(self._path, "{}.backup".format(self._path))
-        except FileNotFoundError:
+        except OSError:
             """
             no-op because file didn't exist
             nothing that we need to do 
