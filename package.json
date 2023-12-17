@@ -9,10 +9,10 @@
     ["ledapp/services/__init__.py", "github:jklz-dev/micropython-led-app/ledapp/services/__init__.py"],
     ["ledapp/services/config/__init__.py", "github:jklz-dev/micropython-led-app/ledapp/services/config/__init__.py"],
     ["ledapp/services/config/config_handler.py", "github:jklz-dev/micropython-led-app/ledapp/services/config/config_handler.py"],
-    ["ledapp/services/pixel/__init__.py", "github:jklz-dev/micropython-led-app/ledapp/drivers/pixel/__init__.py"]
+    ["ledapp/services/pixel/__init__.py", "github:jklz-dev/micropython-led-app/services/pixel/__init__.py"]
   ],
   "deps": [
 
   ],
-  "version": "0.0.1"
+  "version": "0.0.2"
 }
