@@ -1,10 +1,12 @@
 {
   "urls": [
     ["ledapp/__init__.py", "github:jklz-dev/micropython-led-app/ledapp/__init__.py"],
-    ["ledapp/configs.py", "github:jklz-dev/micropython-led-app/ledapp/configs.py"]
+    ["ledapp/configs.py", "github:jklz-dev/micropython-led-app/ledapp/configs.py"],
+    ["ledapp/pixel.py", "github:jklz-dev/micropython-led-app/ledapp/pixel.py"],
+    ["ledapp/display_demo.py", "github:jklz-dev/micropython-led-app/ledapp/display_demo.py"]
   ],
   "deps": [
 
   ],
-  "version": "0.0.5"
+  "version": "0.0.6"
 }

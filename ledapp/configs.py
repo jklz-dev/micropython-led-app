@@ -92,4 +92,5 @@ class ConfigHandler:
 
 
 deviceConfig = ConfigHandler("/config/device.json")
+displayConfig = ConfigHandler("/config/display.json")
 mqttConfig = ConfigHandler("/config/mqtt.json")
