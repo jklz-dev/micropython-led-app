@@ -1,0 +1,9 @@
+{
+  "urls": [
+    ["ledapp/__init__.py", "github:jklz-dev/micropython-led-app/ledapp/__init__.py"]
+  ],
+  "deps": [
+
+  ],
+  "version": "0.0.1"
+}
