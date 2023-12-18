@@ -25,6 +25,14 @@ class PixelHandler(object):
         self._neopixel.fill(color)
         self._neopixel.write()
 
+    def _set_display_pattern(self, pattern_colors: list[tuple]) -> None:
+        pattern_length = len(pattern_colors)
+        for pixel_address in range(deviceConfig.total_pixels):
+            pixel_color = pattern_colors[pixel_address % pattern_length]
+            self._neopixel[pixel_address] = pixel_color
+
+        self._neopixel.write()
+
     async def _set_display_flash(self, color: tuple, speed: int) -> None:
         is_on = True
         while True:
@@ -56,6 +64,9 @@ class PixelHandler(object):
 
         elif display['type'] == 'flash':
             self._async_task = uasyncio.create_task(self._set_display_flash(display['color'], display['speed']))
+
+        elif display['type'] == 'pattern':
+            self._set_display_pattern(display['pattern'])
 
 
 

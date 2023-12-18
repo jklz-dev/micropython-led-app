@@ -79,11 +79,12 @@ demo_scroll_one = {
 async def run_demo():
     demos = [
         demo_solid_red,
-        demo_solid_green,
-        demo_solid_blue,
-        demo_flash_red,
-        demo_flash_green,
-        demo_flash_blue,
+        # demo_solid_green,
+        # demo_solid_blue,
+        # demo_flash_red,
+        # demo_flash_green,
+        # demo_flash_blue,
+        demo_pattern_one,
     ]
 
     while True:
