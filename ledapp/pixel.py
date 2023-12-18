@@ -2,7 +2,7 @@ from .configs import deviceConfig, displayConfig
 from time import sleep_ms
 from machine import Pin
 from neopixel import NeoPixel
-import asyncio
+import uasyncio
 
 
 class PixelHandler:
@@ -43,10 +43,10 @@ class PixelHandler:
             print('no display type set')
 
         elif display['type'] == 'solid':
-            asyncio.run(self._set_display_solid(display['color']))
+            uasyncio.run(self._set_display_solid(display['color']))
 
         elif display['type'] == 'flash':
-            asyncio.run(self._set_display_flash(display['color'], display['speed']))
+            uasyncio.run(self._set_display_flash(display['color'], display['speed']))
 
 
 pixel = PixelHandler()
