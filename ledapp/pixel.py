@@ -34,6 +34,8 @@ class PixelHandler:
             sleep_ms(speed)
 
     def set_display(self, display: dict):
+        self._ensure_configured()
+
         deviceConfig.display = display
 
         if display['type'] is None:
