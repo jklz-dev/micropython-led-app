@@ -2,6 +2,7 @@ from .configs import deviceConfig, displayConfig
 from time import sleep_ms
 from machine import Pin
 from neopixel import NeoPixel
+import asyncio
 
 
 class PixelHandler:
@@ -18,11 +19,11 @@ class PixelHandler:
     def is_setup(self) -> bool:
         return self._pin is not None or self._neopixel is not None
 
-    def _set_display_solid(self, color: tuple) -> None:
+    async def _set_display_solid(self, color: tuple) -> None:
         self._neopixel.fill(color)
         self._neopixel.write()
 
-    def _set_display_flash(self, color: tuple, speed: int) -> None:
+    async def _set_display_flash(self, color: tuple, speed: int) -> None:
         is_on = True
         while (deviceConfig.display['speed'] is not None
                and deviceConfig.display['type'] == 'flash'
@@ -42,11 +43,10 @@ class PixelHandler:
             print('no display type set')
 
         elif display['type'] == 'solid':
-            self._set_display_solid(display['color'])
+            asyncio.run(self._set_display_solid(display['color']))
 
         elif display['type'] == 'flash':
-            print(display['color'], display['speed'])
-            self._set_display_flash(display['color'], display['speed'])
+            asyncio.run(self._set_display_flash(display['color'], display['speed']))
 
 
 pixel = PixelHandler()
