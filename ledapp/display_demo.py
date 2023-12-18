@@ -1,11 +1,19 @@
 from .pixel import pixel
 from time import sleep
 
-color_red = (0, 255, 0)
-color_green = (255, 0, 0)
-color_blue = (0, 0, 255)
-color_white = (255, 255, 255)
-color_off = (0, 0, 0)
+color_value = 125
+if color_value != 255:
+    color_red = (0, color_value, 0)
+    color_green = (color_value, 0, 0)
+    color_blue = (0, 0, color_value)
+    color_white = (color_value, color_value, color_value)
+    color_off = (0, 0, 0)
+else:
+    color_red = (0, 255, 0)
+    color_green = (255, 0, 0)
+    color_blue = (0, 0, 255)
+    color_white = (255, 255, 255)
+    color_off = (0, 0, 0)
 
 demo_solid_red = {
     'type': 'solid',
@@ -25,13 +33,13 @@ demo_solid_blue = {
 demo_flash_red = {
     'type': 'flash',
     'color': color_red,
-    'speed': 500,
+    'speed': 750,
 }
 
 demo_flash_blue = {
     'type': 'flash',
     'color': color_blue,
-    'speed': 500,
+    'speed': 750,
 }
 
 demo_flash_green = {
@@ -67,7 +75,8 @@ demo_scroll_one = {
     'speed': 500,
 }
 
-def display_demo():
+
+def run_demo():
     demos = [
         demo_solid_red,
         demo_solid_green,
@@ -79,5 +88,7 @@ def display_demo():
 
     while True:
         for demo in demos:
+            print("Demo: {}".format(demo))
             pixel.set_display(demo)
-            sleep(5)
+            sleep(3)
+        print("end of demo")

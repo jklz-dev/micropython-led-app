@@ -1,7 +1,7 @@
-from .display_demo import display_demo
+from .display_demo import run_demo
 
 def run():
     # run app from package
     print('running ledapp')
-    display_demo()
+    run_demo()
 
