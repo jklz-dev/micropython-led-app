@@ -8,7 +8,7 @@ import uasyncio
 class PixelHandler(object):
     _neopixel: NeoPixel
     _pin: Pin
-    _async_task: uasyncio.Task
+    _async_task: uasyncio.Task | None = None
 
     def __init__(self):
         self.config = deviceConfig
@@ -41,8 +41,9 @@ class PixelHandler(object):
         if self._async_task is None:
             print('no async_task')
         else:
-            print('has task, canceled')
+            print('has task, cancele')
             self._async_task.cancel()
+            self._async_task = None
 
         print('updating config')
         deviceConfig.display = display
