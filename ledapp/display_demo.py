@@ -54,8 +54,6 @@ demo_pattern_one = {
         color_red,
         color_white,
         color_white,
-        color_white,
-        color_white,
     ],
 }
 demo_pattern_two = {
