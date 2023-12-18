@@ -17,13 +17,14 @@ class PixelHandler(object):
         self._pin = Pin(config_pin, mode=Pin.OUT)
         self._neopixel = NeoPixel(self._pin, config_total_pixels)
 
-        last_config_display = deviceConfig.display
-        if last_config_display is not None:
-            self.set_display(last_config_display)
-
     @property
     def is_setup(self) -> bool:
         return self._pin is not None or self._neopixel is not None
+
+    async def apply_from_config(self) -> None:
+        last_config_display = deviceConfig.display
+        if last_config_display is not None:
+            await self.set_display(last_config_display)
 
     def _set_display_solid(self, color: tuple) -> None:
         self._neopixel.fill(color)
