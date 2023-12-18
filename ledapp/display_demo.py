@@ -76,6 +76,8 @@ def display_demo():
         demo_flash_green,
         demo_flash_blue,
     ]
+    pixel._ensure_configured()
+
     while True:
         for demo in demos:
             pixel.set_display(demo)

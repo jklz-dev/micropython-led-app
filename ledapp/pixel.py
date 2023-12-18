@@ -3,20 +3,24 @@ from time import sleep_ms
 from machine import Pin
 from neopixel import NeoPixel
 
+
 class PixelHandler:
     _neopixel: NeoPixel
     _pin: Pin
 
     @property
     def is_setup(self) -> bool:
-        return self._pin is not None and self._neopixel is not None
+        return self._pin is not None or self._neopixel is not None
 
     def _ensure_configured(self):
         if self.is_setup:
-           return None
+            print("pixel already setup")
+            return None
+
 
         self._pin = Pin(deviceConfig.pin, mode=Pin.OUT)
         self._neopixel = NeoPixel(self._pin, deviceConfig.total_pixels)
+        print("pixel setup", self.is_setup)
 
     def _set_display_solid(self, color: tuple) -> None:
         self._neopixel.fill(color)
