@@ -1,5 +1,5 @@
 from .pixel import pixel
-from time import sleep
+import uasyncio
 
 color_value = 125
 if color_value != 255:
@@ -76,7 +76,7 @@ demo_scroll_one = {
 }
 
 
-def run_demo():
+async def run_demo():
     demos = [
         demo_solid_red,
         demo_solid_green,
@@ -90,5 +90,5 @@ def run_demo():
         for demo in demos:
             print("Demo: {}".format(demo))
             pixel.set_display(demo)
-            sleep(3)
+            await uasyncio.sleep(3)
         print("end of demo")
