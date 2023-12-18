@@ -18,20 +18,20 @@ class PixelHandler:
     def is_setup(self) -> bool:
         return self._pin is not None or self._neopixel is not None
 
-    def _show_display_solid(self) -> None:
-        self._neopixel.fill(deviceConfig.display['color'])
+    def _set_display_solid(self, color: tuple) -> None:
+        self._neopixel.fill(color)
         self._neopixel.write()
 
-    def _show_display_flash(self) -> None:
+    def _set_display_flash(self, color: tuple, speed: int) -> None:
         is_on = True
         while deviceConfig.display['speed'] is not None and deviceConfig.display['type'] == 'flash':
             if is_on:
-                self._neopixel.fill(deviceConfig.display['color'])
+                self._neopixel.fill(color)
             else:
-                self._neopixel.fill(0, 0, 0)
+                self._neopixel.fill((0, 0, 0))
             self._neopixel.write()
             is_on = not is_on
-            sleep_ms(deviceConfig.display['speed'])
+            sleep_ms(speed)
 
     def set_display(self, display: dict):
         deviceConfig.display = display
@@ -40,11 +40,11 @@ class PixelHandler:
             print('no display type set')
 
         elif display['type'] == 'solid':
-            self._show_display_solid()
+            self._set_display_solid(display['color'])
 
         elif display['type'] == 'flash':
             print(display['color'], display['speed'])
-            self._show_display_flash()
+            self._set_display_flash(display['color'], display['speed'])
 
 
 pixel = PixelHandler()
