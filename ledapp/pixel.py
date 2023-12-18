@@ -28,9 +28,9 @@ class PixelHandler:
 
     async def _set_display_flash(self, color: tuple, speed: int) -> None:
         is_on = True
-        while (self.config.display['speed'] is not None
-               and self.config.display['type'] == 'flash'
-               and self.config.display['color'] != color):
+        while (deviceConfig.display['speed'] is not None
+               and deviceConfig.display['type'] == 'flash'
+               and deviceConfig.display['color'] != color):
             if is_on:
                 self._neopixel.fill(color)
             else:
@@ -40,9 +40,12 @@ class PixelHandler:
             await uasyncio.sleep_ms(speed)
 
     async def set_display(self, display: dict):
+        print('received: ', display)
         if self._async_task is not None:
+            print('has task, canceled')
             self._async_task.cancel()
 
+        print('updating config')
         deviceConfig.display = display
 
         if display['type'] is None:

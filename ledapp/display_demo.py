@@ -89,6 +89,6 @@ async def run_demo():
     while True:
         for demo in demos:
             print("Demo: {}".format(demo))
-            pixel.set_display(demo)
+            await pixel.set_display(demo)
             await uasyncio.sleep(3)
         print("end of demo")
