@@ -58,6 +58,18 @@ demo_pattern_one = {
         color_white,
     ],
 }
+demo_pattern_two = {
+    'type': 'pattern',
+    'pattern': [
+        color_red,
+        color_white,
+        color_green,
+        color_white,
+        color_white,
+        color_blue,
+        color_off,
+    ],
+}
 
 demo_scroll_one = {
     'type': 'scroll',
@@ -85,6 +97,7 @@ async def run_demo():
         # demo_flash_green,
         # demo_flash_blue,
         demo_pattern_one,
+        demo_pattern_two,
     ]
 
     while True:
