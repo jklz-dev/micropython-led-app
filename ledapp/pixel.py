@@ -2,14 +2,13 @@ from .configs import deviceConfig, displayConfig
 from time import sleep_ms
 from machine import Pin
 from neopixel import NeoPixel
-import _thread
 import uasyncio
 
 
 class PixelHandler(object):
     _neopixel: NeoPixel
     _pin: Pin
-    _async_task = None
+    _async_task: uasyncio.Task
 
     def __init__(self):
         self.config = deviceConfig
@@ -28,9 +27,7 @@ class PixelHandler(object):
 
     async def _set_display_flash(self, color: tuple, speed: int) -> None:
         is_on = True
-        while (deviceConfig.display['speed'] is not None
-               and deviceConfig.display['type'] == 'flash'
-               and deviceConfig.display['color'] != color):
+        while True:
             if is_on:
                 self._neopixel.fill(color)
             else:
@@ -41,7 +38,9 @@ class PixelHandler(object):
 
     async def set_display(self, display: dict):
         print('received: ', display)
-        if self._async_task is not None:
+        if self._async_task is None:
+            print('no async_task')
+        else:
             print('has task, canceled')
             self._async_task.cancel()
 

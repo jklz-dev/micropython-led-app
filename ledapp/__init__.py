@@ -1,8 +1,7 @@
 from .display_demo import run_demo
-import uasyncio
 
 
-def run():
+async def run():
     # run app from package
     print('running ledapp')
-    uasyncio.run(run_demo())
+    await run_demo()
