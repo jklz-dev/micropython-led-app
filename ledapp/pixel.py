@@ -24,7 +24,9 @@ class PixelHandler:
 
     def _set_display_flash(self, color: tuple, speed: int) -> None:
         is_on = True
-        while deviceConfig.display['speed'] is not None and deviceConfig.display['type'] == 'flash':
+        while (deviceConfig.display['speed'] is not None
+               and deviceConfig.display['type'] == 'flash'
+               and deviceConfig.display['color'] != color):
             if is_on:
                 self._neopixel.fill(color)
             else:
