@@ -44,6 +44,14 @@ class PixelHandler(object):
             is_on = not is_on
             await uasyncio.sleep_ms(speed)
 
+    async def _set_display_pattern_scroll(self, pattern_colors: list[tuple], speed: int) -> None:
+        active_pattern = pattern_colors[:]
+
+        while True:
+            self._set_display_pattern(active_pattern)
+            active_pattern.insert(0, active_pattern.pop())
+            await uasyncio.sleep_ms(speed)
+
     async def set_display(self, display: dict):
         print('received: ', display)
         if self._async_task is None:
@@ -68,6 +76,9 @@ class PixelHandler(object):
         elif display['type'] == 'pattern':
             self._set_display_pattern(display['pattern'])
 
+        elif display['type'] == 'scroll':
+            self._async_task = uasyncio.create_task(
+                self._set_display_pattern_scroll(display['pattern'], display['speed']))
 
 
 pixel = PixelHandler()

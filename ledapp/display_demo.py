@@ -72,15 +72,22 @@ demo_pattern_two = {
 demo_scroll_one = {
     'type': 'scroll',
     'pattern': [
+        color_red,
+        color_green,
         color_white,
         color_off,
         color_off,
         color_off,
-        color_off,
-        color_off,
-        color_off,
-        color_off,
-        color_off,
+    ],
+    'speed': 500,
+}
+demo_scroll_two = {
+    'type': 'scroll',
+    'pattern': [
+        color_red,
+        color_white,
+        color_green,
+        color_white,
     ],
     'speed': 500,
 }
@@ -96,6 +103,8 @@ async def run_demo():
         # demo_flash_blue,
         demo_pattern_one,
         demo_pattern_two,
+        demo_scroll_one,
+        demo_scroll_two,
     ]
 
     while True:
