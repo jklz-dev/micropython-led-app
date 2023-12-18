@@ -34,19 +34,22 @@ class PixelHandler:
                 self._neopixel.fill((0, 0, 0))
             self._neopixel.write()
             is_on = not is_on
-            sleep_ms(speed)
-
-    def set_display(self, display: dict):
-        deviceConfig.display = display
+            await uasyncio.sleep_ms(speed)
+    async def async_set_display(self, display: dict) -> None:
 
         if display['type'] is None:
             print('no display type set')
 
         elif display['type'] == 'solid':
-            uasyncio.run(self._set_display_solid(display['color']))
+            uasyncio.create_task(self._set_display_solid(display['color']))
 
         elif display['type'] == 'flash':
-            uasyncio.run(self._set_display_flash(display['color'], display['speed']))
+            uasyncio.create_task(self._set_display_flash(display['color'], display['speed']))
+
+    def set_display(self, display: dict):
+        deviceConfig.display = display
+        uasyncio.get_running_loop().run_until_complete(self.async_set_display(display))
+
 
 
 pixel = PixelHandler()
