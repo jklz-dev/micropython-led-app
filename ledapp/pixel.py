@@ -48,7 +48,7 @@ class PixelHandler:
 
     def set_display(self, display: dict):
         deviceConfig.display = display
-        uasyncio.get_running_loop().run_until_complete(self.async_set_display(display))
+        uasyncio.get_event_loop().run_until_complete(self.async_set_display(display))
 
 
 
