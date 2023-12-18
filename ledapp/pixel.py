@@ -6,10 +6,10 @@ import _thread
 import uasyncio
 
 
-class PixelHandler:
+class PixelHandler(object):
     _neopixel: NeoPixel
     _pin: Pin
-    # _async_task: uasyncio.
+    _async_task = None
 
     def __init__(self):
         self.config = deviceConfig
