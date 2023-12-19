@@ -1,4 +1,4 @@
-from .configs import deviceConfig, displayConfig
+from .configs import deviceConfig
 from time import sleep_ms
 from machine import Pin
 from neopixel import NeoPixel
