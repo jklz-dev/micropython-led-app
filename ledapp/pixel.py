@@ -83,7 +83,7 @@ class PixelHandler(object):
             value['color'] = tuple(value['color'])
 
         if 'pattern' in value and value['pattern'] is not None:
-            value['pattern'] = map(tuple, value['pattern'])
+            value['pattern'] = list(map(tuple, value['pattern']))
 
         return value
 
