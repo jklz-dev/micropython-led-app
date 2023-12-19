@@ -66,9 +66,10 @@ class ConfigHandler:
             self._store = {}
             return None
 
+        # noinspection PyBroadException
         try:
             self._store = json.loads(contents)
-        except json.decoder.JSONDecodeError:
+        except Exception as e:
             """
             error parsing contents as json
             """

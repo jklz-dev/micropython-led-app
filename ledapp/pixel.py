@@ -24,9 +24,9 @@ class PixelHandler(object):
     async def _apply_state_from_config(self):
         last_state = displayConfig.state
         if last_state is None:
-            self.set_state(True)
+            self.set_status(True)
         else:
-            self.set_state(last_state, False)
+            self.set_status(last_state, False)
 
     async def _apply_value_from_config(self) -> None:
         last_display = displayConfig.value
@@ -68,7 +68,7 @@ class PixelHandler(object):
             active_pattern.insert(0, active_pattern.pop())
             await uasyncio.sleep_ms(speed)
 
-    async def set_state(self, state: bool, store_update: bool = True) -> None:
+    async def set_status(self, state: bool, store_update: bool = True) -> None:
         if store_update:
             displayConfig.state = state
 
