@@ -122,4 +122,4 @@ class PixelHandler(object):
                 self._set_display_pattern_scroll(display['pattern'], display['speed']))
 
 
-pixel = PixelHandler()
+pixelHandler = PixelHandler()

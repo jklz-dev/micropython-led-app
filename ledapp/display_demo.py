@@ -1,4 +1,4 @@
-from .pixel import pixel
+from .pixel import pixelHandler
 import uasyncio
 
 color_value = 125
@@ -110,6 +110,6 @@ async def run_demo():
     while True:
         for demo in demos:
             print("Demo: {}".format(demo))
-            await pixel.set_display(demo)
+            await pixelHandler.set_display(demo)
             await uasyncio.sleep(3)
         print("end of demo")
