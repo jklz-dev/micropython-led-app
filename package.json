@@ -6,7 +6,7 @@
     ["ledapp/display_demo.py", "github:jklz-dev/micropython-led-app/ledapp/display_demo.py"]
   ],
   "deps": [
-
+    ["umqtt.simple",  "latest"]
   ],
-  "version": "0.1.4"
+  "version": "0.2.0"
 }
