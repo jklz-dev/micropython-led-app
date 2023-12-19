@@ -3,7 +3,6 @@ import os
 
 
 class ConfigHandler:
-
     # class attributes that are not accessed dynamically
     _class_attributes = [
         '_path',
@@ -92,7 +91,5 @@ class ConfigHandler:
         self._save_store_to_file()
 
 
-
 deviceConfig = ConfigHandler("/config/device.json")
-displayConfig = ConfigHandler("/config/display.json")
 mqttConfig = ConfigHandler("/config/mqtt.json")
