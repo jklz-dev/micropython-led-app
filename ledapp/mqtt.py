@@ -80,7 +80,7 @@ def create_mqtt_client() -> MQTTClient:
     )
     client.set_last_will(_topic_online, json.dumps(False), True, 1)
     client.connect()
-    client.set_callback(receiver)
+    client.set_callback(sub_callback)
 
     client.publish(_topic_online, json.dumps(True), True, 1)
 
