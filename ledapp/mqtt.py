@@ -1,5 +1,3 @@
-import asyncio
-
 import uasyncio
 import json
 from umqtt.simple import MQTTClient
@@ -45,10 +43,6 @@ class MqttReceiver:
 receiver = MqttReceiver()
 
 
-async def _subscribe(client: MQTTClient, topic, qos: int) -> None:
-    client.subscribe(topic, qos)
-
-
 def handle_callback(topic, message):
     topic_string = topic.decode('utf-8')
     message_string = message.decode('utf-8')
@@ -81,10 +75,8 @@ def create_mqtt_client() -> MQTTClient:
 
     client.publish(_topic_online, json.dumps(True), True, 1)
 
-    uasyncio.gather(
-        _subscribe(client, _topic_status, 1),
-        _subscribe(client, _topic_display, 0)
-    )
+    client.subscribe(_topic_status, 1)
+    client.subscribe(_topic_display, 0)
 
     return client
 
