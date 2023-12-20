@@ -4,7 +4,6 @@
     ["ledapp/configs.py", "github:jklz-dev/micropython-led-app/ledapp/configs.py"],
     ["ledapp/pixel.py", "github:jklz-dev/micropython-led-app/ledapp/pixel.py"],
     ["ledapp/mqtt.py", "github:jklz-dev/micropython-led-app/ledapp/mqtt.py"],
-    ["ledapp/async_handler.py", "github:jklz-dev/micropython-led-app/ledapp/async_handler.py"],
     ["ledapp/display_demo.py", "github:jklz-dev/micropython-led-app/ledapp/display_demo.py"]
   ],
   "deps": [

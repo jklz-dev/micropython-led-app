@@ -1,8 +1,6 @@
 from .configs import deviceConfig, displayConfig
-from time import sleep_ms
 from machine import Pin
 from neopixel import NeoPixel
-from .async_handler import create_task, run_until_complete
 import uasyncio
 
 
@@ -61,15 +59,11 @@ class PixelHandler(object):
             active_pattern.insert(0, active_pattern.pop())
             await uasyncio.sleep_ms(speed)
 
-    def set_status(self, state: bool, store_update: bool = True) -> None:
-        if store_update:
-            displayConfig.state = state
+    async def set_status(self, state: bool) -> None:
+        displayConfig.state = state
 
-        if not state:
-            # turn off right away
-            self._set_display_solid((0, 0, 0))
         print('set_status - pre-run')
-        run_until_complete(self.run())
+        await self.run()
         print('set_status - post-run')
 
     def process_value(self, value: dict) -> dict:
@@ -107,19 +101,19 @@ class PixelHandler(object):
             self._set_display_solid(display['color'])
 
         elif display['type'] == 'flash':
-            self._async_task = create_task(self._set_display_flash(display['color'], display['speed']))
+            self._async_task = uasyncio.create_task(self._set_display_flash(display['color'], display['speed']))
 
         elif display['type'] == 'pattern':
             self._set_display_pattern(display['pattern'])
 
         elif display['type'] == 'scroll':
-            self._async_task = create_task(
+            self._async_task = uasyncio.create_task(
                 self._set_display_pattern_scroll(display['pattern'], display['speed']))
 
-    def set_display(self, display: dict) -> None:
+    async def set_display(self, display: dict) -> None:
         self.set_display_value(display)
         print('set_display - pre-run')
-        run_until_complete(self.run())
+        await self.run()
         print('set_display - post-run')
 
 

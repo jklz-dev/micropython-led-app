@@ -1,7 +1,6 @@
 from .display_demo import run_demo
 from .pixel import pixelHandler
 from .configs import mqttConfig
-from .async_handler import run_until_complete
 from .mqtt import create_mqtt_client, receive_messages
 
 
@@ -19,4 +18,7 @@ def run_app(is_online: bool = False, device_identifier: str | None = None) -> No
 
     if is_online:
         client = create_mqtt_client()
-        receive_messages(client)
+        uasyncio.run(receive_messages(client))
+
+    else:
+        uasyncio.run(pixelHandler.run())

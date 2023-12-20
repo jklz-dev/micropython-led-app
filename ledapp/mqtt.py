@@ -1,6 +1,7 @@
+import asyncio
+
 import uasyncio
 import json
-from time import sleep
 from umqtt.simple import MQTTClient
 from .pixel import pixelHandler
 from ledapp.configs import mqttConfig
@@ -8,6 +9,40 @@ from ledapp.configs import mqttConfig
 _topic_display = 'groups/kitchen_top/display'
 _topic_status = 'groups/kitchen_top/status'
 _topic_online = 'devices/{}/online'.format(mqttConfig.device)
+
+
+class MqttReceiver:
+    topic: str | None = None
+    message: str | None = None
+    data: dict | bool | None = None
+
+    def reset(self):
+        print("reset")
+        self.topic = None
+        self.message = None
+        self.data = None
+
+    def __call__(self, topic, message):
+        print("__call__")
+        self.topic = topic.decode('utf-8')
+        self.message = message.decode('utf-8')
+
+    async def consume(self):
+        print("Consuming message")
+        try:
+            self.data = json.loads(self.message)
+
+            if self.topic == _topic_display:
+                await pixelHandler.set_display(self.data)
+            elif self.topic == _topic_status:
+                await pixelHandler.set_status(self.data)
+        except Exception as e:
+            print("error in handling message: ", e)
+
+        self.reset()
+
+
+receiver = MqttReceiver()
 
 
 async def _subscribe(client: MQTTClient, topic, qos: int) -> None:
@@ -40,11 +75,11 @@ def create_mqtt_client() -> MQTTClient:
         ssl=True,
         ssl_params={'server_hostname': mqttConfig.host}
     )
-    client.set_last_will(_topic_online, json.dumps(True), True, 1)
+    client.set_last_will(_topic_online, json.dumps(False), True, 1)
     client.connect()
-    client.set_callback(handle_callback)
+    client.set_callback(receiver)
 
-    client.publish(_topic_online, json.dumps(False), True, 1)
+    client.publish(_topic_online, json.dumps(True), True, 1)
 
     uasyncio.gather(
         _subscribe(client, _topic_status, 1),
@@ -54,8 +89,15 @@ def create_mqtt_client() -> MQTTClient:
     return client
 
 
-def receive_messages(client: MQTTClient):
+async def receive_messages(client: MQTTClient):
     while True:
-        print('waiting for messages')
-        client.wait_msg()
-        sleep(3)
+        try:
+            print('waiting for messages')
+            client.wait_msg()
+            print('consume message')
+            await receiver.consume()
+
+        except Exception as e:
+            print("error in receiving messages: ", e)
+
+        uasyncio.sleep(3)
