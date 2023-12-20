@@ -31,22 +31,28 @@ class PixelHandler(object):
         self._neopixel.write()
 
     def _set_display_pattern(self, pattern_colors: list[tuple]) -> None:
-        pattern_length = len(pattern_colors)
-        for pixel_address in range(deviceConfig.total_pixels):
-            pixel_color = pattern_colors[pixel_address % pattern_length]
-            self._neopixel[pixel_address] = pixel_color
+        try:
+            pattern_length = len(pattern_colors)
+            for pixel_address in range(deviceConfig.total_pixels):
+                pixel_color = pattern_colors[pixel_address % pattern_length]
+                self._neopixel[pixel_address] = pixel_color
 
-        self._neopixel.write()
+            self._neopixel.write()
+        except Exception as e:
+            print('Exception: ', e)
 
     async def _set_display_flash(self, color: tuple, speed: int) -> None:
         is_on = True
         while True:
             print('update_flash: ', is_on)
-            if is_on:
-                self._neopixel.fill(color)
-            else:
-                self._neopixel.fill((0, 0, 0))
-            self._neopixel.write()
+            try:
+                if is_on:
+                    self._neopixel.fill(color)
+                else:
+                    self._neopixel.fill((0, 0, 0))
+                self._neopixel.write()
+            except Exception as e:
+                print('Exception: ', e)
             is_on = not is_on
             await uasyncio.sleep_ms(speed)
 
@@ -55,9 +61,14 @@ class PixelHandler(object):
 
         while True:
             print('update_pattern_scroll')
-            self._set_display_pattern(active_pattern)
-            active_pattern.insert(0, active_pattern.pop())
-            await uasyncio.sleep_ms(speed)
+            try:
+                self._set_display_pattern(active_pattern)
+                active_pattern.insert(0, active_pattern.pop())
+                print('update_pattern_scroll-pre-sleep')
+                await uasyncio.sleep_ms(speed)
+                print('update_pattern_scroll-post-sleep')
+            except Exception as e:
+                print("Can't update pattern scroll", e)
 
     async def set_status(self, state: bool) -> None:
         displayConfig.state = state

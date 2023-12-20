@@ -31,7 +31,8 @@ class MqttReceiver:
             self.data = json.loads(self.message)
 
             if self.topic == _topic_display:
-                await pixelHandler.set_display(self.data)
+                # await pixelHandler.set_display(self.data)
+                pixelHandler.set_display_value(self.data)
             elif self.topic == _topic_status:
                 await pixelHandler.set_status(self.data)
         except Exception as e:
@@ -85,9 +86,10 @@ async def receive_messages(client: MQTTClient):
     while True:
         try:
             print('waiting for messages')
-            client.wait_msg()
+            await client.wait_msg()
             print('consume message')
             await receiver.consume()
+            await pixelHandler.run()
 
         except Exception as e:
             print("error in receiving messages: ", e)
