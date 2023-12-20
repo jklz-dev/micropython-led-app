@@ -1,16 +1,14 @@
-import json
-
-from umqtt.simple import MQTTClient
 import uasyncio
+import json
+from time import sleep
+from umqtt.simple import MQTTClient
 from .pixel import pixelHandler
-from .async_handler import run_until_complete
 from ledapp.configs import mqttConfig
-
-
 
 _topic_display = 'groups/kitchen_top/display'
 _topic_status = 'groups/kitchen_top/status'
 _topic_online = 'devices/{}/online'.format(mqttConfig.device)
+
 
 async def _subscribe(client: MQTTClient, topic, qos: int) -> None:
     client.subscribe(topic, qos)
@@ -48,15 +46,16 @@ def create_mqtt_client() -> MQTTClient:
 
     client.publish(_topic_online, json.dumps(False), True, 1)
 
-    _subscribe(client, _topic_status, 1)
-    _subscribe(client, _topic_display, 0)
+    uasyncio.gather(
+        _subscribe(client, _topic_status, 1),
+        _subscribe(client, _topic_display, 0)
+    )
 
     return client
 
 
-async def async_receive_messages(client: MQTTClient):
-    print('async receive messages')
+def receive_messages(client: MQTTClient):
     while True:
+        print('waiting for messages')
         client.wait_msg()
-        run_until_complete(pixelHandler.run())
-        await uasyncio.sleep(1)
+        sleep(3)

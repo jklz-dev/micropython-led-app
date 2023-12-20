@@ -2,16 +2,7 @@ from .display_demo import run_demo
 from .pixel import pixelHandler
 from .configs import mqttConfig
 from .async_handler import run_until_complete
-from .mqtt import create_mqtt_client, async_receive_messages, MQTTClient
-import uasyncio
-
-
-async def run_app_async(is_online: bool = False, mqtt_client: MQTTClient | None = None) -> None:
-    print('running ledapp async')
-    # attempt to display from config
-    run_until_complete(pixelHandler.run())
-    if is_online and mqtt_client is not None:
-        await async_receive_messages(mqtt_client)
+from .mqtt import create_mqtt_client, receive_messages
 
 
 def run_app(is_online: bool = False, device_identifier: str | None = None) -> None:
@@ -23,9 +14,9 @@ def run_app(is_online: bool = False, device_identifier: str | None = None) -> No
     elif mqttConfig.device is None:
         mqttConfig.device = "test-device"
 
-    if not is_online:
-        uasyncio.run(run_app_async(is_online))
+    # attempt to display from config
+    run_until_complete(pixelHandler.run())
 
-    else:
+    if is_online:
         client = create_mqtt_client()
-        uasyncio.run(run_app_async(is_online, client))
+        receive_messages(client)
