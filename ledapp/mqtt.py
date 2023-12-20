@@ -96,7 +96,7 @@ async def mqtt_handler():
     # consume messages
     while True:
         print('checking for message')
-        await client.check_msg()
+        client.check_msg()
         uasyncio.sleep(1)
 
 
