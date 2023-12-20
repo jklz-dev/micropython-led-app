@@ -1,3 +1,4 @@
+import uasyncio
 from .display_demo import run_demo
 from .pixel import pixelHandler
 from .configs import mqttConfig
@@ -12,9 +13,6 @@ def run_app(is_online: bool = False, device_identifier: str | None = None) -> No
 
     elif mqttConfig.device is None:
         mqttConfig.device = "test-device"
-
-    # attempt to display from config
-    run_until_complete(pixelHandler.run())
 
     if is_online:
         client = create_mqtt_client()
