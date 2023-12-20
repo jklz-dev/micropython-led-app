@@ -25,6 +25,10 @@ class MqttReceiver:
         self.topic = topic.decode('utf-8')
         self.message = message.decode('utf-8')
 
+    @property
+    def has_data(self):
+        return self.topic is not None and self.message is not None
+
     async def consume(self):
         print("Consuming message")
         try:
@@ -32,7 +36,7 @@ class MqttReceiver:
 
             if self.topic == _topic_display:
                 # await pixelHandler.set_display(self.data)
-                pixelHandler.set_display_value(self.data)
+                await pixelHandler.set_display(self.data)
             elif self.topic == _topic_status:
                 await pixelHandler.set_status(self.data)
         except Exception as e:
@@ -85,13 +89,13 @@ def create_mqtt_client() -> MQTTClient:
 async def receive_messages(client: MQTTClient):
     while True:
         try:
-            print('waiting for messages')
-            await client.wait_msg()
-            print('consume message')
-            await receiver.consume()
-            await pixelHandler.run()
+            print('checking for message')
+            await client.check_msg()
+            if receiver.has_data:
+                print('consume message')
+                await receiver.consume()
 
         except Exception as e:
             print("error in receiving messages: ", e)
 
-        uasyncio.sleep(3)
+        uasyncio.sleep(1)
