@@ -6,14 +6,16 @@ from .pixel import pixelHandler
 from ledapp.configs import mqttConfig
 
 
+
 _topic_display = 'groups/kitchen_top/display'
 _topic_status = 'groups/kitchen_top/status'
+_topic_online = 'devices/{}/online'.format(mqttConfig.device)
 
 async def _subscribe(client: MQTTClient, topic, qos: int) -> None:
     client.subscribe(topic, qos)
 
 
-async def async_handle_callback(topic, message):
+def handle_callback(topic, message):
     topic_string = topic.decode('utf-8')
     message_string = message.decode('utf-8')
 
@@ -21,16 +23,16 @@ async def async_handle_callback(topic, message):
         message_data = json.loads(message_string)
 
         if topic_string == _topic_display:
-            await pixelHandler.set_display(message_data)
+            pixelHandler.set_display_value(message_data)
         elif topic_string == _topic_status:
-            await pixelHandler.set_status(message_data)
+            pixelHandler.set_status_value(message_data)
     except Exception as e:
         print("error in handling message: ", e)
 
 
 def create_mqtt_client() -> MQTTClient:
     client = MQTTClient(
-        'client_test_id',
+        mqttConfig.device,
         mqttConfig.host,
         port=0,
         user=bytes(mqttConfig.user, 'utf-8'),
@@ -39,11 +41,14 @@ def create_mqtt_client() -> MQTTClient:
         ssl=True,
         ssl_params={'server_hostname': mqttConfig.host}
     )
+    client.set_last_will(_topic_online, json.dumps(True), True, 1)
     client.connect()
-    client.set_callback(lambda topic, msg: uasyncio.create_task(async_handle_callback(topic, msg)))
+    client.set_callback(handle_callback)
 
-    uasyncio.create_task(_subscribe(client, _topic_status, 1))
-    uasyncio.create_task(_subscribe(client, _topic_display, 0))
+    client.publish(_topic_online, json.dumps(False), True, 1)
+
+    _subscribe(client, _topic_status, 1)
+    _subscribe(client, _topic_display, 0)
 
     return client
 
@@ -51,8 +56,6 @@ def create_mqtt_client() -> MQTTClient:
 async def async_receive_messages(client: MQTTClient):
     print('async receive messages')
     while True:
-        message_response = client.wait_msg()
-        if message_response is not None:
-            print(message_response)
-            # uasyncio.create_task(async_handle_callback(message_response))
+        client.wait_msg()
+        await pixelHandler.run()
         await uasyncio.sleep(1)

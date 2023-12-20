@@ -17,25 +17,15 @@ class PixelHandler(object):
         self._pin = Pin(config_pin, mode=Pin.OUT)
         self._neopixel = NeoPixel(self._pin, config_total_pixels)
 
+        if displayConfig.state is None:
+            displayConfig.state = True
+
     @property
     def is_setup(self) -> bool:
         return not (self._pin is None or self._neopixel is None)
 
-    async def _apply_state_from_config(self):
-        last_state = displayConfig.state
-        if last_state is None:
-            self.set_status(True)
-        else:
-            self.set_status(last_state, False)
-
-    async def _apply_value_from_config(self) -> None:
-        last_display = displayConfig.value
-        if last_display is not None:
-            await self.set_display(last_display, False)
-
-    async def apply_from_config(self) -> None:
-        await self._apply_state_from_config()
-        await self._apply_value_from_config()
+    def _set_display_off(self):
+        self._set_display_solid((0, 0, 0))
 
     def _set_display_solid(self, color: tuple) -> None:
         self._neopixel.fill(color)
@@ -72,10 +62,8 @@ class PixelHandler(object):
         if store_update:
             displayConfig.state = state
 
-        if state:
-            # set value to prior value
-            await self._apply_value_from_config()
-        else:
+        if not state:
+            # turn off right away
             self._set_display_solid((0, 0, 0))
 
     def process_value(self, value: dict) -> dict:
@@ -86,6 +74,44 @@ class PixelHandler(object):
             value['pattern'] = list(map(tuple, value['pattern']))
 
         return value
+
+
+    def set_display_value(self, display: dict):
+        displayConfig.value = self.process_value(display)
+
+    async def run(self) -> None:
+        display = self.process_value(displayConfig.value)
+        print('running value: ', display)
+        # check if prior task running
+        if self._async_task is None:
+            print('no running async task')
+        else:
+            print('running task, will cancel')
+            self._async_task.cancel()
+            self._async_task = None
+
+        if not displayConfig.state:
+            self._set_display_off()
+            return None
+
+        if display['type'] is None:
+            print('problem config')
+            self._set_display_off()
+
+        elif display['type'] == 'solid':
+            self._set_display_solid(display['color'])
+
+        elif display['type'] == 'flash':
+            self._async_task = uasyncio.create_task(self._set_display_flash(display['color'], display['speed']))
+
+        elif display['type'] == 'pattern':
+            self._set_display_pattern(display['pattern'])
+
+        elif display['type'] == 'scroll':
+            self._async_task = uasyncio.create_task(
+                self._set_display_pattern_scroll(display['pattern'], display['speed']))
+
+
 
     async def set_display(self, display: dict, store_update: bool = True) -> None:
         if store_update:
