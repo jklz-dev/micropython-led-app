@@ -3,6 +3,7 @@ import json
 from umqtt.simple import MQTTClient
 import uasyncio
 from .pixel import pixelHandler
+from .async_handler import run_until_complete
 from ledapp.configs import mqttConfig
 
 
@@ -23,7 +24,7 @@ def handle_callback(topic, message):
         message_data = json.loads(message_string)
 
         if topic_string == _topic_display:
-            pixelHandler.set_display_value(message_data)
+            pixelHandler.set_display(message_data)
         elif topic_string == _topic_status:
             pixelHandler.set_status_value(message_data)
     except Exception as e:
@@ -57,5 +58,5 @@ async def async_receive_messages(client: MQTTClient):
     print('async receive messages')
     while True:
         client.wait_msg()
-        await pixelHandler.run()
+        run_until_complete(pixelHandler.run())
         await uasyncio.sleep(1)

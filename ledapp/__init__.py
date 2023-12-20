@@ -1,6 +1,7 @@
 from .display_demo import run_demo
 from .pixel import pixelHandler
 from .configs import mqttConfig
+from .async_handler import run_until_complete
 from .mqtt import create_mqtt_client, async_receive_messages, MQTTClient
 import uasyncio
 
@@ -8,7 +9,7 @@ import uasyncio
 async def run_app_async(is_online: bool = False, mqtt_client: MQTTClient | None = None) -> None:
     print('running ledapp async')
     # attempt to display from config
-    await pixelHandler.run()
+    run_until_complete(pixelHandler.run())
     if is_online and mqtt_client is not None:
         await async_receive_messages(mqtt_client)
 
