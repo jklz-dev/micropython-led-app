@@ -110,6 +110,8 @@ class PixelHandler(object):
             self._async_task = uasyncio.create_task(
                 self._set_display_pattern_scroll(display['pattern'], display['speed']))
 
+        uasyncio.sleep(0)
+
     async def set_display(self, display: dict) -> None:
         self.set_display_value(display)
         print('set_display - pre-run')
