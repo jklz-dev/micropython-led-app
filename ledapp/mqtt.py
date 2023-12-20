@@ -2,6 +2,7 @@ import uasyncio
 import json
 from umqtt.simple import MQTTClient
 from .pixel import pixelHandler
+from .async_provider import asyncProvider
 from ledapp.configs import mqttConfig
 
 _topic_display = 'groups/kitchen_top/display'
@@ -48,19 +49,22 @@ class MqttReceiver:
 receiver = MqttReceiver()
 
 
-def handle_callback(topic, message):
-    topic_string = topic.decode('utf-8')
-    message_string = message.decode('utf-8')
-
+async def handle_callback(topic, message):
+    print("Consuming message")
     try:
-        message_data = json.loads(message_string)
+        data = json.loads(message)
 
-        if topic_string == _topic_display:
-            pixelHandler.set_display(message_data)
-        elif topic_string == _topic_status:
-            pixelHandler.set_status_value(message_data)
+        if topic == _topic_display:
+            # await pixelHandler.set_display(self.data)
+            await pixelHandler.set_display(data)
+        elif topic == _topic_status:
+            await pixelHandler.set_status(data)
     except Exception as e:
         print("error in handling message: ", e)
+
+
+def sub_callback(topic, message):
+    asyncProvider.subscribe(handle_callback(topic, message))
 
 
 def create_mqtt_client() -> MQTTClient:
@@ -86,16 +90,15 @@ def create_mqtt_client() -> MQTTClient:
     return client
 
 
-async def receive_messages(client: MQTTClient):
+async def mqtt_handler():
+    # setup connection
+    client = create_mqtt_client()
+    # consume messages
     while True:
-        try:
-            print('checking for message')
-            await client.check_msg()
-            if receiver.has_data:
-                print('consume message')
-                await receiver.consume()
-
-        except Exception as e:
-            print("error in receiving messages: ", e)
-
+        print('checking for message')
+        await client.check_msg()
         uasyncio.sleep(1)
+
+
+def receive_messages():
+    asyncProvider.run_main(mqtt_handler())

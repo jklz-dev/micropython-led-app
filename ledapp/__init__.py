@@ -1,8 +1,8 @@
-import uasyncio
+from .async_provider import asyncProvider
 from .display_demo import run_demo
 from .pixel import pixelHandler
 from .configs import mqttConfig
-from .mqtt import create_mqtt_client, receive_messages
+from .mqtt import receive_messages
 
 
 def run_app(is_online: bool = False, device_identifier: str | None = None) -> None:
@@ -15,8 +15,7 @@ def run_app(is_online: bool = False, device_identifier: str | None = None) -> No
         mqttConfig.device = "test-device"
 
     if is_online:
-        client = create_mqtt_client()
-        uasyncio.run(receive_messages(client))
+        receive_messages()
 
     else:
-        uasyncio.run(pixelHandler.run())
+        asyncProvider.run_main(pixelHandler.run())

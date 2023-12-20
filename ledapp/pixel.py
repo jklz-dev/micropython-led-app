@@ -1,6 +1,7 @@
 from .configs import deviceConfig, displayConfig
 from machine import Pin
 from neopixel import NeoPixel
+from .async_provider import asyncProvider
 import uasyncio
 
 
@@ -112,13 +113,13 @@ class PixelHandler(object):
             self._set_display_solid(display['color'])
 
         elif display['type'] == 'flash':
-            self._async_task = uasyncio.create_task(self._set_display_flash(display['color'], display['speed']))
+            self._async_task = asyncProvider.create_task(self._set_display_flash(display['color'], display['speed']))
 
         elif display['type'] == 'pattern':
             self._set_display_pattern(display['pattern'])
 
         elif display['type'] == 'scroll':
-            self._async_task = uasyncio.create_task(
+            self._async_task = asyncProvider.create_task(
                 self._set_display_pattern_scroll(display['pattern'], display['speed']))
 
         await uasyncio.sleep(0)
