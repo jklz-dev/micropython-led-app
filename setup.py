@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='micropython-ledapp',
-    version='0.4.9',
+    version='0.4.10',
     description='IOT Led App for MicroPython',
 
     url='https://github.com/jklz-dev/micropython-ledapp',
