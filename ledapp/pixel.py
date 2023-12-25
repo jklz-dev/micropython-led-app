@@ -23,6 +23,19 @@ class PixelHandler(object):
     def is_setup(self) -> bool:
         return not (self._pin is None or self._neopixel is None)
 
+    def wheel(self, pos: int) -> tuple[int, int, int]:
+        # Input a value 0 to 255 to get a color value.
+        # The colours are a transition r - g - b - back to r.
+        if pos < 0 or pos > 255:
+            return (0, 0, 0)
+        if pos < 85:
+            return (255 - pos * 3, pos * 3, 0)
+        if pos < 170:
+            pos -= 85
+            return (0, 255 - pos * 3, pos * 3)
+        pos -= 170
+        return (pos * 3, 0, 255 - pos * 3)
+
     def _set_display_off(self):
         self._set_display_solid((0, 0, 0))
 
@@ -69,6 +82,16 @@ class PixelHandler(object):
                 print('update_pattern_scroll-post-sleep')
             except Exception as e:
                 print("Can't update pattern scroll", e)
+
+    async def _set_display_rainbow(self, speed: int) -> None:
+        num_pixels = deviceConfig.total_pixels
+        while True:
+            for j in range(255):
+                for pixel_address in range(deviceConfig.total_pixels):
+                    rc_index = (pixel_address * 256 // num_pixels) + j
+                    self._neopixel[pixel_address] = self.wheel(rc_index & 255)
+                self._neopixel.write()
+                await uasyncio.sleep_ms(speed)
 
     async def set_status(self, state: bool) -> None:
         displayConfig.state = state
@@ -120,6 +143,9 @@ class PixelHandler(object):
         elif display['type'] == 'scroll':
             self._async_task = uasyncio.create_task(
                 self._set_display_pattern_scroll(display['pattern'], display['speed']))
+
+        elif display['type'] == 'rainbow':
+            self._async_task = uasyncio.create_task(self._set_display_rainbow(display['speed']))
 
         await uasyncio.sleep(0)
 
