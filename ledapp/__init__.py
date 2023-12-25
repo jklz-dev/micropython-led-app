@@ -10,16 +10,22 @@ loop = uasyncio.get_event_loop()
 
 network_mac_address = ubinascii.hexlify(network.WLAN(network.STA_IF).config('mac')).decode()
 
+if mqttConfig.in_group is None:
+    mqttConfig.in_group = True
+    mqttConfig.group = 'main_decoration'
+
+device_topic_prefix = 'devices/{}'.format(network_mac_address)
+
+control_topic_type = 'groups' if mqttConfig.in_group else 'devices'
+control_topic_identifier = mqttConfig.group if mqttConfig.in_group else network_mac_address
+
+control_topic_prefix = '{}/{}'.format(control_topic_type, control_topic_identifier)
+
 mqtt_topics = {
-    'connection': 'devices/{}/online'.format(network_mac_address),
-    "status": [
-        'groups/kitchen_top/status',
-        # 'groups/decoration/status',
-    ],
-    "display": [
-        'groups/kitchen_top/display',
-        # 'groups/decoration/display',
-    ],
+    'connection': '{}/online'.format(device_topic_prefix),
+    'config': '{}/config'.format(device_topic_prefix),
+    "status": '{}/status'.format(control_topic_prefix),
+    "display": '{}/display'.format(control_topic_prefix),
 }
 
 
@@ -30,11 +36,13 @@ async def messages(client):  # Respond to incoming messages
             topic_string = topic.decode('utf-8')
             message_json = json.loads(msg.decode('utf-8'))
 
-            if topic_string in mqtt_topics['display']:
+            if topic_string == mqtt_topics['display']:
                 # await pixelHandler.set_display(self.data)
                 await pixelHandler.set_display(message_json)
-            elif topic_string in mqtt_topics['status']:
+            elif topic_string == mqtt_topics['status']:
                 await pixelHandler.set_status(message_json)
+            elif topic_string == mqtt_topics['config']:
+                print('set config: ', message_json)
         except Exception as e:
             print("error in handling message: ", e)
 
@@ -44,12 +52,13 @@ async def up(client):  # Respond to connectivity being (re)established
         print('starting up')
         await client.up.wait()  # Wait on an Event
         client.up.clear()
-        for topic in mqtt_topics['status']:
-            await client.subscribe(topic, 1)
-
-        for topic in mqtt_topics['display']:
-            await client.subscribe(topic, 0)
-
+        # subscribe to status changes
+        await client.subscribe(mqtt_topics['status'], 1)
+        # subscribe to display changes
+        await client.subscribe(mqtt_topics['display'], 0)
+        # subscribe to config changes
+        await client.subscribe(mqtt_topics['config'], 1)
+        # publish device connected
         client.publish(mqtt_topics['connection'], json.dumps(True), True, 1)
 
 
