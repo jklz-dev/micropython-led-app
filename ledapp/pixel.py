@@ -83,7 +83,15 @@ class PixelHandler(object):
             except Exception as e:
                 print("Can't update pattern scroll", e)
 
-    async def _set_display_rainbow(self) -> None:
+    async def _set_display_rainbow(self, speed: int) -> None:
+        num_pixels = deviceConfig.total_pixels
+        while True:
+            for j in range(255):
+                self._neopixel.fill(self.wheel(j & 255))
+                self._neopixel.write()
+                await uasyncio.sleep_ms(speed)
+
+    async def _set_display_rainbow_scroll(self, speed: int) -> None:
         num_pixels = deviceConfig.total_pixels
         while True:
             for j in range(255):
@@ -91,6 +99,7 @@ class PixelHandler(object):
                     rc_index = (pixel_address * 256 // num_pixels) + j
                     self._neopixel[pixel_address] = self.wheel(rc_index & 255)
                 self._neopixel.write()
+                await uasyncio.sleep_ms(speed)
 
     async def set_status(self, state: bool) -> None:
         displayConfig.state = state
@@ -144,7 +153,7 @@ class PixelHandler(object):
                 self._set_display_pattern_scroll(display['pattern'], display['speed']))
 
         elif display['type'] == 'rainbow':
-            self._async_task = uasyncio.create_task(self._set_display_rainbow())
+            self._async_task = uasyncio.create_task(self._set_display_rainbow(display['speed']))
 
         await uasyncio.sleep(0)
 
