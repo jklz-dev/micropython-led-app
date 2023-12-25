@@ -62,6 +62,12 @@ async def up(client):  # Respond to connectivity being (re)established
         client.publish(mqtt_topics['connection'], json.dumps(True), True, 1)
 
 
+async def wifi_handler(is_connected: bool) -> None:
+    if not is_connected:
+        # not connected so run last config
+        await pixelHandler.run()
+
+
 async def app_main(client):
     global loop
     await client.connect()
@@ -79,6 +85,9 @@ config['ssl'] = True
 config['ssl_params'] = {"server_hostname": broker}
 # on disconnect
 config['will'] = (mqtt_topics['connection'], json.dumps(False), True, 1)
+
+# wifi connection handler
+config['wifi_coro'] = wifi_handler
 
 config["queue_len"] = 1
 MQTTClient.DEBUG = False  # Optional: print diagnostic messages
