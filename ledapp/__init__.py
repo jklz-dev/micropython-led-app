@@ -70,6 +70,7 @@ async def wifi_handler(is_connected: bool) -> None:
 
 async def app_main(client):
     global loop
+    await pixelHandler.run()
     await client.connect()
     for coroutine in (up, messages):
         uasyncio.create_task(coroutine(client))
