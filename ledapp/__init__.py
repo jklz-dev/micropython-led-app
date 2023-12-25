@@ -64,7 +64,6 @@ async def app_main(client):
 
 config['user'] = mqttConfig.user
 config['password'] = mqttConfig.password
-config['keepalive'] = 7200
 broker = mqttConfig.host  # e.g long_hex_string.s2.eu.hivemq.cloud
 config['server'] = broker
 config['ssl'] = True
