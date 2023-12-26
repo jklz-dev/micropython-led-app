@@ -16,8 +16,10 @@ if mqttConfig.in_group is None:
 
 device_topic_prefix = 'devices/{}'.format(network_mac_address)
 
-control_topic_type = 'groups' if mqttConfig.in_group else 'devices'
-control_topic_identifier = mqttConfig.group if mqttConfig.in_group else network_mac_address
+is_in_group = mqttConfig.in_group and mqttConfig.group is not None
+
+control_topic_type = 'groups' if is_in_group else 'devices'
+control_topic_identifier = mqttConfig.group if is_in_group else network_mac_address
 
 control_topic_prefix = '{}/{}'.format(control_topic_type, control_topic_identifier)
 
@@ -27,6 +29,8 @@ mqtt_topics = {
     "status": '{}/status'.format(control_topic_prefix),
     "display": '{}/display'.format(control_topic_prefix),
 }
+
+print('using topics', mqtt_topics)
 
 
 async def messages(client):  # Respond to incoming messages
