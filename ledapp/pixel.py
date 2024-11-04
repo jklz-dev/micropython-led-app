@@ -119,10 +119,13 @@ class PixelHandler(object):
     async def _set_display_playback(self, frames: list[dict]) -> None:
         active_frames = frames[:]
         while True:
+            await uasyncio.sleep_ms(500)
             print('update_playback')
             try:
                 # get next frame to display
+                print('get frame')
                 next_frame = active_frames.pop()
+                print("next frame: {}".format(next_frame))
                 #  add next frame to end of list
                 active_frames.insert(0, next_frame)
                 # play next frame
