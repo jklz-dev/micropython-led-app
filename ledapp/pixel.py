@@ -54,6 +54,21 @@ class PixelHandler(object):
         except Exception as e:
             print('Exception: ', e)
 
+    def _set_display_single_pattern(self, pattern_colors: list[tuple]) -> None:
+        try:
+            # TODO: allow passing overflow color
+            self._neopixel.fill((0, 0, 0))
+            pattern_length = len(pattern_colors)
+            for pixel_address in range(pattern_length):
+                if pixel_address < deviceConfig.total_pixels:
+                    # set pixel color
+                    pixel_color = pattern_colors[pixel_address]
+                    self._neopixel[pixel_address] = pixel_color
+
+            self._neopixel.write()
+        except Exception as e:
+            print('Exception: ', e)
+
     async def _set_display_flash(self, color: tuple, speed: int) -> None:
         is_on = True
         while True:
@@ -118,7 +133,7 @@ class PixelHandler(object):
 
     async def _set_display_playback_frame_pattern(self, pattern_colors: list[tuple], delay_time: int) -> None:
         # display pattern
-        self._set_display_pattern(pattern_colors)
+        self._set_display_single_pattern(pattern_colors)
         print('playback_frame_pattern-pre-sleep')
         await uasyncio.sleep_ms(delay_time)
         print('playback_frame_pattern-post-sleep')
