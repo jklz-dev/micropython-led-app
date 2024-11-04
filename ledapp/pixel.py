@@ -128,9 +128,10 @@ class PixelHandler(object):
 
     async def _set_display_playback(self, frames: list[dict], base: list[tuple] | None) -> None:
         active_frames = frames[:]
-        if base is not None:
-            # set base to be displayed
-            print("has base config")
+        # if base is not None:
+        #     # set base to be displayed
+        #     print("has base config")
+
         while True:
             await uasyncio.sleep_ms(500)
             print('update_playback')
