@@ -54,17 +54,27 @@ class PixelHandler(object):
         except Exception as e:
             print('Exception: ', e)
 
-    def _set_display_single_pattern(self, pattern_colors: list[tuple]) -> None:
+    def _set_display_single_pattern(self, pattern_colors: list[tuple], fill_color: tuple | None = None) -> None:
         try:
-            # TODO: allow passing overflow color
-            self._neopixel.fill((0, 0, 0))
+            if fill_color is not None:
+                self._neopixel.fill(fill_color)
             pattern_length = len(pattern_colors)
-            for pixel_address in range(pattern_length):
-                if pixel_address < deviceConfig.total_pixels:
+            for pixel_address in range(deviceConfig.total_pixels):
+                pixel_color = pattern_colors[pixel_address] or None;
+                if pixel_color is not None:
                     # set pixel color
-                    pixel_color = pattern_colors[pixel_address]
                     self._neopixel[pixel_address] = pixel_color
+            self._neopixel.write()
+        except Exception as e:
+            print('Exception: ', e)
 
+    def _set_display_single_pattern_on_base(self, pattern_colors: list[tuple], base_pattern_colors: list[tuple], ) -> None:
+        try:
+            for pixel_address in range(deviceConfig.total_pixels):
+                pixel_color = pattern_colors[pixel_address] or base_pattern_colors[pixel_address] or None;
+                if pixel_color is not None:
+                    # set pixel color
+                    self._neopixel[pixel_address] = pixel_color
             self._neopixel.write()
         except Exception as e:
             print('Exception: ', e)
@@ -116,16 +126,18 @@ class PixelHandler(object):
                 self._neopixel.write()
                 await uasyncio.sleep_ms(speed)
 
-    async def _set_display_playback(self, frames: list[dict]) -> None:
+    async def _set_display_playback(self, frames: list[dict], base: list[tuple] | None) -> None:
         active_frames = frames[:]
+        if base is not None:
+            # set base to be displayed
+
         while True:
             await uasyncio.sleep_ms(500)
             print('update_playback')
             try:
                 # get next frame to display
-                print('get frame')
                 next_frame = active_frames.pop(0)
-                print("next frame: {}".format(next_frame))
+                # print("next frame: {}".format(next_frame))
                 #  add next frame to end of list
                 active_frames.append(next_frame)
                 # play next frame
@@ -133,16 +145,19 @@ class PixelHandler(object):
                     await self._set_display_playback_frame_pattern(next_frame['pattern'], next_frame['delay'])
                 else:
                     print("unknown frame type: {}".format(next_frame['type']))
-                await uasyncio.sleep_ms(2000)
-                print("frame delay: {}".format(next_frame['delay']))
-                await uasyncio.sleep_ms(next_frame['delay'])
+                # await uasyncio.sleep_ms(2000)
+                # print("frame delay: {}".format(next_frame['delay']))
+                # await uasyncio.sleep_ms(next_frame['delay'])
             except Exception as e:
                 print("Can't update playback frame", e)
 
     async def _set_display_playback_frame_pattern(self, pattern_colors: list[tuple], delay_time: int) -> None:
         # display pattern
         self._set_display_single_pattern(pattern_colors)
-        print('playback_frame_pattern-applied')
+        print('playback_frame_pattern-pre-sleep')
+        await uasyncio.sleep_ms(delay_time)
+        print('playback_frame_pattern-post-sleep')
+        return None
 
     async def set_status(self, state: bool) -> None:
         displayConfig.state = state
