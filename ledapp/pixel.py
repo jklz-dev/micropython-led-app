@@ -124,10 +124,10 @@ class PixelHandler(object):
             try:
                 # get next frame to display
                 print('get frame')
-                next_frame = active_frames.pop()
+                next_frame = active_frames.pop(0)
                 print("next frame: {}".format(next_frame))
                 #  add next frame to end of list
-                active_frames.insert(0, next_frame)
+                active_frames.append(next_frame)
                 # play next frame
                 if next_frame['type'] == 'pattern':
                     await self._set_display_playback_frame_pattern(next_frame['pattern'], next_frame['delay'])
