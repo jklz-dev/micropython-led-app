@@ -278,10 +278,12 @@ class MQTT_base:
             try:
                 # try import ussl to support older micropython
                 import ussl
+                self._sock = ussl.wrap_socket(self._sock, **self._ssl_params)
             except ImportError:
                 import ssl
+                self._sock = ssl.wrap_socket(self._sock, **self._ssl_params)
 
-            self._sock = ussl.wrap_socket(self._sock, **self._ssl_params)
+
         premsg = bytearray(b"\x10\0\0\0\0\0")
         msg = bytearray(b"\x04MQTT\x04\0\0\0")  # Protocol 3.1.1
 
