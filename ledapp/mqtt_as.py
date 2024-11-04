@@ -275,7 +275,11 @@ class MQTT_base:
         await asyncio.sleep_ms(_DEFAULT_MS)
         self.dprint("Connecting to broker.")
         if self._ssl:
-            import ussl
+            try:
+                # try import ussl to support older micropython
+                import ussl
+            except ImportError:
+                import ssl
 
             self._sock = ussl.wrap_socket(self._sock, **self._ssl_params)
         premsg = bytearray(b"\x10\0\0\0\0\0")
