@@ -101,6 +101,28 @@ class PixelHandler(object):
                 self._neopixel.write()
                 await uasyncio.sleep_ms(speed)
 
+    async def _set_display_playback(self, frames: list[dict]) -> None:
+        active_frames = frames[:]
+        while True:
+            print('update_playback')
+            try:
+                # get next frame to display
+                next_frame = active_frames.pop()
+                #  add next frame to end of list
+                active_frames.insert(0, next_frame)
+                # play next frame
+                if next_frame['type'] == 'pattern':
+                    await self._set_display_playback_frame_pattern(next_frame['pattern'], next_frame['delay'])
+            except Exception as e:
+                print("Can't update pattern scroll", e)
+
+    async def _set_display_playback_frame_pattern(self, pattern_colors: list[tuple], delay_time: int) -> None:
+        # display pattern
+        self._set_display_pattern(pattern_colors)
+        print('playback_frame_pattern-pre-sleep')
+        await uasyncio.sleep_ms(delay_time)
+        print('playback_frame_pattern-post-sleep')
+
     async def set_status(self, state: bool) -> None:
         displayConfig.state = state
 
@@ -154,6 +176,9 @@ class PixelHandler(object):
 
         elif display['type'] == 'rainbow':
             self._async_task = uasyncio.create_task(self._set_display_rainbow(display['speed']))
+
+        elif display['type'] == 'playback':
+            self._async_task = uasyncio.create_task(self._set_display_playback(display['frames']))
 
         await uasyncio.sleep(0)
 
