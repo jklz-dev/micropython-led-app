@@ -59,8 +59,12 @@ class PixelHandler(object):
             if fill_color is not None:
                 self._neopixel.fill(fill_color)
             pattern_length = len(pattern_colors)
-            for pixel_address in range(deviceConfig.total_pixels):
-                pixel_color = pattern_colors[pixel_address] or None
+            for pixel_address in range(pattern_length):
+                try:
+                    pixel_color = pattern_colors[pixel_address] or None
+                except IndexError:
+                    # catch if ever doesn't exist (shouldn't happen)
+                    pixel_color = None
                 if pixel_color is not None:
                     # set pixel color
                     self._neopixel[pixel_address] = pixel_color
@@ -71,7 +75,16 @@ class PixelHandler(object):
     def _set_display_single_pattern_on_base(self, pattern_colors: list[tuple], base_pattern_colors: list[tuple]) -> None:
         try:
             for pixel_address in range(deviceConfig.total_pixels):
-                pixel_color = pattern_colors[pixel_address] or base_pattern_colors[pixel_address] or None
+                try:
+                    base_pixel_color = base_pattern_colors[pixel_address] or None
+                except IndexError:
+                    base_pixel_color = None
+
+                try:
+                    pixel_color = pattern_colors[pixel_address] or base_pixel_color
+                except IndexError:
+                    pixel_color = base_pixel_color
+
                 if pixel_color is not None:
                     # set pixel color
                     self._neopixel[pixel_address] = pixel_color
@@ -154,7 +167,7 @@ class PixelHandler(object):
 
     async def _set_display_playback_frame_pattern(self, pattern_colors: list[tuple], delay_time: int) -> None:
         # display pattern
-        self._set_display_single_pattern(pattern_colors)
+        self._set_display_single_pattern(pattern_colors, (0, 0, 0))
         print('playback_frame_pattern-pre-sleep')
         await uasyncio.sleep_ms(delay_time)
         print('playback_frame_pattern-post-sleep')
