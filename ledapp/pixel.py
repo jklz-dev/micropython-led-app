@@ -128,15 +128,16 @@ class PixelHandler(object):
                 # play next frame
                 if next_frame['type'] == 'pattern':
                     await self._set_display_playback_frame_pattern(next_frame['pattern'], next_frame['delay'])
+                else:
+                    print("unknown frame type: {}".format(next_frame['type']))
+                await uasyncio.sleep_ms(next_frame['delay'])
             except Exception as e:
                 print("Can't update pattern scroll", e)
 
     async def _set_display_playback_frame_pattern(self, pattern_colors: list[tuple], delay_time: int) -> None:
         # display pattern
         self._set_display_single_pattern(pattern_colors)
-        print('playback_frame_pattern-pre-sleep')
-        await uasyncio.sleep_ms(delay_time)
-        print('playback_frame_pattern-post-sleep')
+        print('playback_frame_pattern-applied')
 
     async def set_status(self, state: bool) -> None:
         displayConfig.state = state
