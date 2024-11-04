@@ -54,13 +54,13 @@ class PixelHandler(object):
         except Exception as e:
             print('Exception: ', e)
 
-    def _set_display_single_pattern(self, pattern_colors: list[tuple], fill_color: tuple | None = None) -> None:
+    def _set_display_single_pattern(self, pattern_colors: list[tuple], fill_color: tuple = None) -> None:
         try:
             if fill_color is not None:
                 self._neopixel.fill(fill_color)
             pattern_length = len(pattern_colors)
             for pixel_address in range(deviceConfig.total_pixels):
-                pixel_color = pattern_colors[pixel_address] or None;
+                pixel_color = pattern_colors[pixel_address] or None
                 if pixel_color is not None:
                     # set pixel color
                     self._neopixel[pixel_address] = pixel_color
@@ -68,10 +68,10 @@ class PixelHandler(object):
         except Exception as e:
             print('Exception: ', e)
 
-    def _set_display_single_pattern_on_base(self, pattern_colors: list[tuple], base_pattern_colors: list[tuple], ) -> None:
+    def _set_display_single_pattern_on_base(self, pattern_colors: list[tuple], base_pattern_colors: list[tuple]) -> None:
         try:
             for pixel_address in range(deviceConfig.total_pixels):
-                pixel_color = pattern_colors[pixel_address] or base_pattern_colors[pixel_address] or None;
+                pixel_color = pattern_colors[pixel_address] or base_pattern_colors[pixel_address] or None
                 if pixel_color is not None:
                     # set pixel color
                     self._neopixel[pixel_address] = pixel_color
@@ -126,7 +126,7 @@ class PixelHandler(object):
                 self._neopixel.write()
                 await uasyncio.sleep_ms(speed)
 
-    async def _set_display_playback(self, frames: list[dict], base: list[tuple] | None) -> None:
+    async def _set_display_playback(self, frames: list[dict], base: list[tuple] = None) -> None:
         active_frames = frames[:]
         # if base is not None:
         #     # set base to be displayed
