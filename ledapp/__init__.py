@@ -36,13 +36,23 @@ print('using topics', mqtt_topics)
 async def messages(client):  # Respond to incoming messages
     print('starting messages')
     async for topic, msg, retained in client.queue:
+        # get message parsed from json
         try:
             topic_string = topic.decode('utf-8')
             message_body = msg.decode('utf-8')
             print("message topic: {}".format(topic))
             print("message body: {}".format(msg))
             message_json = json.loads(message_body)
-
+        except Exception as e:
+            print(topic)
+            print(topic.decode('utf-8'))
+            print(msg)
+            print(msg.decode('utf-8'))
+            print("error in handling message as json: ", e)
+            topic_string = None
+            message_json = None
+        # work with message
+        try:
             if topic_string == mqtt_topics['display']:
                 # await pixelHandler.set_display(self.data)
                 await pixelHandler.set_display(message_json)
@@ -52,6 +62,7 @@ async def messages(client):  # Respond to incoming messages
                 print('set config: ', message_json)
         except Exception as e:
             print("error in handling message: ", e)
+
 
 
 async def up(client):  # Respond to connectivity being (re)established
