@@ -38,7 +38,10 @@ async def messages(client):  # Respond to incoming messages
     async for topic, msg, retained in client.queue:
         try:
             topic_string = topic.decode('utf-8')
-            message_json = json.loads(msg.decode('utf-8'))
+            message_body = msg.decode('utf-8')
+            print("message topic: {}".format(topic_string))
+            print("message body: {}".format(message_body))
+            message_json = json.loads(message_body)
 
             if topic_string == mqtt_topics['display']:
                 # await pixelHandler.set_display(self.data)
