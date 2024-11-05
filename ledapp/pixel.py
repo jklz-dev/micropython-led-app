@@ -14,7 +14,7 @@ class PixelHandler(object):
         config_pin = deviceConfig.pin
         config_total_pixels = deviceConfig.total_pixels
         self._pin = Pin(config_pin, mode=Pin.OUT)
-        self._neopixel = NeoPixel(self._pin, config_total_pixels)
+        self._neopixel = NeoPixel(self._pin, config_total_pixels, 3, 0)
 
         if displayConfig.state is None:
             displayConfig.state = True
