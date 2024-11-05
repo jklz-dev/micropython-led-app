@@ -40,9 +40,12 @@ async def messages(client):  # Respond to incoming messages
         try:
             topic_string = topic.decode('utf-8')
             message_body = msg.decode('utf-8')
-            print("message topic: {}".format(topic))
-            print("message body: {}".format(msg))
-            message_json = json.loads(message_body)
+            print("message topic: {}".format(topic_string))
+            print("message body: {}".format(message_body))
+            if message_body is not None:
+                message_json = json.loads(message_body)
+            else:
+                message_json = None
         except Exception as e:
             print(topic)
             print(topic.decode('utf-8'))
