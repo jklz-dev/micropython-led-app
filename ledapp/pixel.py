@@ -14,7 +14,9 @@ class PixelHandler(object):
         config_pin = deviceConfig.pin
         config_total_pixels = deviceConfig.total_pixels
         self._pin = Pin(config_pin, mode=Pin.OUT)
-        self._neopixel = NeoPixel(pin=self._pin, n=config_total_pixels, pixel_order="RGB")
+        self._neopixel = NeoPixel(pin=self._pin, n=config_total_pixels)
+        # set to use colors as rgb
+        self._neopixel.ORDER = (0, 1, 2, 3)
 
         if displayConfig.state is None:
             displayConfig.state = True
