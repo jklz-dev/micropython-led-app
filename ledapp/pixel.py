@@ -177,8 +177,10 @@ class PixelHandler(object):
         print('playback_frame_pattern-post-sleep')
         return None
 
-    async def _set_display_weathor(self, display: dict):
+    async def _set_display_weather(self, display: dict):
         playback = Weather().with_weather(display).to_display_playback()
+        print("weather")
+        print(playback)
         await self._set_display_playback(playback['frames'])
 
     async def set_status(self, state: bool) -> None:
@@ -238,8 +240,8 @@ class PixelHandler(object):
         elif display['type'] == 'playback':
             self._async_task = uasyncio.create_task(self._set_display_playback(display['frames']))
 
-        elif display['type'] == 'playback':
-            self._async_task = uasyncio.create_task(self._set_display_playback(display['frames']))
+        elif display['type'] == 'weather':
+            self._async_task = uasyncio.create_task(self._set_display_weather(display))
 
         await uasyncio.sleep(0)
 
