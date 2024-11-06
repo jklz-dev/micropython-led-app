@@ -138,12 +138,12 @@ class Colors(object):
 
 class WeatherColors(object):
     ground: WeatherGround = {
-        "grass": Colors.forestgreen,
+        "grass": (0, 25, 0),
         "snow": Colors.whitesmoke,
     }
     sky: WeatherSky = {
         "day": Colors.deepskyblue,
-        "night": Colors.midnightblue,
+        "night": Colors.black,
         "cloud": Colors.dimgrey,
         "sun": Colors.lightgoldenrodyellow,
         "moon": Colors.palegoldenrod,
