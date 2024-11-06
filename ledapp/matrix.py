@@ -77,13 +77,11 @@ class Matrix:
         cls.column_count = columns
 
     def __init__(self):
-        self.base_pattern: list | None = None
+        self.base_pattern: list = [None] * Matrix.total_pixels
         self._frames: list[MatrixFrame] = []
-        self._initialize_base_pattern()
 
     def fill(self, fill_color: tuple[int, int, int] = None) -> None:
-        for row_index in range(Matrix.row_count):
-            self.set_row(row_index, fill_color)
+        self.base_pattern = [fill_color] * Matrix.total_pixels
 
     def _initialize_base_pattern(self, fill_color: tuple[int, int, int] = None) -> None:
         self.fill(fill_color)
@@ -103,8 +101,6 @@ class Matrix:
             self.set_cell(row, column, fill_color)
 
     def set_row(self, row: int, color: tuple[int, int, int] = None) -> None:
-        if not self._is_base_pattern_initialized:
-            self._initialize_base_pattern()
         for address in Matrix.get_row_addresses(row):
             self.base_pattern[address] = color
 
