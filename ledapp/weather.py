@@ -90,20 +90,19 @@ class Weather(object):
             # add a single slide with 5 sec delay
             self.matrix.create_frame(5000)
             return None
-        match forcast:
-            case "rain" | "snow":
-                action_row_top: int = int(self.matrix.row_count / 4)
-                action_height: int = int(self.matrix.row_count / 2)
-                action_width: int = int(self.matrix.column_count / 2)
-                action_column_offset: int = int(self.matrix.column_count - action_width / 2)
-                for row_index in range(action_row_top, action_row_top + action_height, 2):
-                    action_cells: list[tuple[int, int]] = []
-                    for column_index in range(action_column_offset, action_column_offset + action_width, 3):
-                        if row_index % 2 == 0:
-                            action_cells.append((row_index, column_index))
-                        else:
-                            action_cells.append((row_index, column_index))
-                    self.matrix.create_frame(750).set_cells(action_cells, WeatherColors.forcast[forcast])
+        if forcast == "rain" or forcast == "snow":
+            action_row_top: int = int(self.matrix.row_count / 4)
+            action_height: int = int(self.matrix.row_count / 2)
+            action_width: int = int(self.matrix.column_count / 2)
+            action_column_offset: int = int(self.matrix.column_count - action_width / 2)
+            for row_index in range(action_row_top, action_row_top + action_height, 2):
+                action_cells: list[tuple[int, int]] = []
+                for column_index in range(action_column_offset, action_column_offset + action_width, 3):
+                    if row_index % 2 == 0:
+                        action_cells.append((row_index, column_index))
+                    else:
+                        action_cells.append((row_index, column_index))
+                self.matrix.create_frame(750).set_cells(action_cells, WeatherColors.forcast[forcast])
 
     def with_weather(self, config: WeatherDisplayConfig) -> Self:
         self._draw_sky(config['sky'], config['sky_action'])
