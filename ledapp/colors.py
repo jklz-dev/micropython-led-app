@@ -145,7 +145,7 @@ class WeatherColors(object):
         "day": Colors.deepskyblue,
         "night": Colors.black,
         "cloud": Colors.dimgrey,
-        "sun": Colors.lightgoldenrodyellow,
+        "sun": Colors.ivory,
         "moon": Colors.palegoldenrod,
     }
     forcast: WeatherForecast = {
