@@ -3,6 +3,8 @@ from machine import Pin
 from neopixel import NeoPixel
 import uasyncio
 
+from .weather import Weather
+
 
 class PixelHandler(object):
     _neopixel: NeoPixel
@@ -175,6 +177,10 @@ class PixelHandler(object):
         print('playback_frame_pattern-post-sleep')
         return None
 
+    async def _set_display_weathor(self, display: dict):
+        playback = Weather().with_weather(display).to_display_playback()
+        await self._set_display_playback(playback['frames'])
+
     async def set_status(self, state: bool) -> None:
         displayConfig.state = state
 
@@ -228,6 +234,9 @@ class PixelHandler(object):
 
         elif display['type'] == 'rainbow':
             self._async_task = uasyncio.create_task(self._set_display_rainbow(display['speed']))
+
+        elif display['type'] == 'playback':
+            self._async_task = uasyncio.create_task(self._set_display_playback(display['frames']))
 
         elif display['type'] == 'playback':
             self._async_task = uasyncio.create_task(self._set_display_playback(display['frames']))
