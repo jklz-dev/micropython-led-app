@@ -131,7 +131,7 @@ class Weather(object):
         :param config: WeatherDisplayConfig
         :return: Weather
         """
-        self._draw_sky(config['sky'], config['sky_action'])
+        self._draw_sky(config['sky'], config.get('sky_action'))
         is_cloudy: bool = config['cloudy']
         if is_cloudy:
             self._draw_clouds()
