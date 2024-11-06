@@ -19,7 +19,7 @@ class WeatherForecast(dict):
     fog: tuple[int, int, int]
 
 
-class Colors(dict[str, tuple[int, int, int] | None]):
+class Colors(dict[str, tuple[int, int, int]]):
     # white
     white = (255, 255, 255)
     snow = (255, 250, 250)
