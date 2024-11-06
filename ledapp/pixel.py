@@ -2,7 +2,7 @@ from .configs import deviceConfig, displayConfig
 from machine import Pin
 from neopixel import NeoPixel
 import uasyncio
-
+from .matrix import Matrix
 from .weather import Weather
 
 
@@ -22,6 +22,8 @@ class PixelHandler(object):
 
         if displayConfig.state is None:
             displayConfig.state = True
+        # TODO: use device config for matrix config
+        Matrix.configure(13, 13)
 
     @property
     def is_setup(self) -> bool:
