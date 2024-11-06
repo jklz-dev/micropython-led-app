@@ -81,7 +81,8 @@ class Matrix:
         self._frames: list[MatrixFrame] = []
 
     def fill(self, fill_color: tuple[int, int, int] = None) -> None:
-        self.base_pattern = [fill_color] * Matrix.total_pixels
+        for row_index in range(Matrix.row_count):
+            self.set_row(row_index, fill_color)
 
     def _initialize_base_pattern(self, fill_color: tuple[int, int, int] = None) -> None:
         self.fill(fill_color)
