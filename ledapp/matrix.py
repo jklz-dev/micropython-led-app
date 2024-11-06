@@ -75,6 +75,7 @@ class Matrix:
     def configure(cls, rows: int, columns: int):
         cls.row_count = rows
         cls.column_count = columns
+        cls.total_pixels = cls.row_count * cls.column_count
 
     def __init__(self):
         self.base_pattern = [None] * Matrix.total_pixels
