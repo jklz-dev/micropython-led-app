@@ -1,12 +1,10 @@
-from typing import Literal, Self, TypedDict, Optional
 
-
-class WeatherGround(TypedDict):
+class WeatherGround(dict):
     grass: tuple[int, int, int]
     snow: tuple[int, int, int]
 
 
-class WeatherSky(TypedDict):
+class WeatherSky(dict):
     day: tuple[int, int, int]
     night: tuple[int, int, int]
     cloud: tuple[int, int, int]
@@ -14,7 +12,7 @@ class WeatherSky(TypedDict):
     moon: tuple[int, int, int]
 
 
-class WeatherForecast(TypedDict):
+class WeatherForecast(dict):
     rain: tuple[int, int, int]
     snow: tuple[int, int, int]
     wind: tuple[int, int, int]
