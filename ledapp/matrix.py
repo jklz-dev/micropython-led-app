@@ -77,7 +77,7 @@ class Matrix:
         cls.column_count = columns
 
     def __init__(self):
-        self.base_pattern = [None] * Matrix.total_pixels
+        self.base_pattern = [ None ] * Matrix.total_pixels
         self._frames: list[MatrixFrame] = []
 
     def fill(self, fill_color: tuple[int, int, int] = None) -> None:
