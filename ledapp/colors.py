@@ -17,8 +17,8 @@ class WeatherSky(TypedDict):
 class WeatherForecast(TypedDict):
     rain: tuple[int, int, int]
     snow: tuple[int, int, int]
-    wind: None
-    fog: None
+    wind: tuple[int, int, int]
+    fog: tuple[int, int, int]
 
 
 class Colors(dict[str, tuple[int, int, int] | None]):
