@@ -2,8 +2,8 @@ from .configs import deviceConfig, displayConfig
 from machine import Pin
 from neopixel import NeoPixel
 import uasyncio
-from .matrix import Matrix
-from .weather import Weather
+# from .matrix import Matrix
+# from .weather import Weather
 
 
 class PixelHandler(object):
@@ -23,7 +23,7 @@ class PixelHandler(object):
         if displayConfig.state is None:
             displayConfig.state = True
         # TODO: use device config for matrix config
-        Matrix.configure(13, 13)
+        # Matrix.configure(13, 13)
 
     @property
     def is_setup(self) -> bool:
@@ -179,11 +179,11 @@ class PixelHandler(object):
         print('playback_frame_pattern-post-sleep')
         return None
 
-    async def _set_display_weather(self, display: dict):
-        playback = Weather().with_weather(display).to_display_playback()
-        print("weather")
-        print(playback)
-        await self._set_display_playback(playback['frames'])
+    # async def _set_display_weather(self, display: dict):
+    #     playback = Weather().with_weather(display).to_display_playback()
+    #     print("weather")
+    #     print(playback)
+    #     await self._set_display_playback(playback['frames'])
 
     async def set_status(self, state: bool) -> None:
         displayConfig.state = state
@@ -242,8 +242,8 @@ class PixelHandler(object):
         elif display['type'] == 'playback':
             self._async_task = uasyncio.create_task(self._set_display_playback(display['frames']))
 
-        elif display['type'] == 'weather':
-            self._async_task = uasyncio.create_task(self._set_display_weather(display))
+        # elif display['type'] == 'weather':
+        #     self._async_task = uasyncio.create_task(self._set_display_weather(display))
 
         await uasyncio.sleep(0)
 

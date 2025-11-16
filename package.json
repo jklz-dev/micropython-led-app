@@ -3,14 +3,10 @@
     ["ledapp/__init__.py", "github:jklz-dev/micropython-led-app/ledapp/__init__.py"],
     ["ledapp/configs.py", "github:jklz-dev/micropython-led-app/ledapp/configs.py"],
     ["ledapp/pixel.py", "github:jklz-dev/micropython-led-app/ledapp/pixel.py"],
-    ["ledapp/mqtt_as.py", "github:jklz-dev/micropython-led-app/ledapp/mqtt_as.py"],
-    ["ledapp/display_demo.py", "github:jklz-dev/micropython-led-app/ledapp/display_demo.py"],
-    ["ledapp/colors.py", "github:jklz-dev/micropython-led-app/ledapp/colors.py"],
-    ["ledapp/matrix.py", "github:jklz-dev/micropython-led-app/ledapp/matrix.py"],
-    ["ledapp/weather.py", "github:jklz-dev/micropython-led-app/ledapp/weather.py"]
+    ["ledapp/mqtt_as.py", "github:jklz-dev/micropython-led-app/ledapp/mqtt_as.py"]
   ],
   "deps": [
     ["umqtt.simple",  "latest"]
   ],
-  "version": "0.4.22"
+  "version": "0.4.23"
 }
